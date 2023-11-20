@@ -14,10 +14,8 @@ const (
 	webPort = "80"
 )
 
-type Config struct{}
-
 func main() {
-	log.Printf("Starting broker service on port %s\n", webPort)
+	log.Printf("Starting notifications service on port %s\n", webPort)
 
 	// initialize the connection of rabbitmq
 	conn, err := connect()
@@ -25,34 +23,10 @@ func main() {
 		log.Println("Failed to connect to RabbitMQ", err)
 		os.Exit(1)
 	}
-
 	defer conn.Close()
 
-	app := Config{}
-
-	app.RecivedReviewToRabbitmq(conn)
-
-	// sendEmail("shuaibuabdulkadir222@gmail.com", "Shuaibu comments on your product", "shuayb")
-
+	RecivedReviewToRabbitmq(conn)
 }
-
-// func sendEmail(email, subject, body string) {
-// 	from := os.Getenv("GMAIL_ACCOUNT")
-// 	password := os.Getenv("GMAIL_SECRET")
-// 	host := "smtp.gmail.com"
-// 	m := gomail.NewMessage()
-// 	m.SetHeader("From", from)
-// 	m.SetHeader("To", from)
-// 	m.SetHeader("Subject", subject)
-// 	m.SetBody("text/html", "Hello <b>Shuaibu</b> and <i>Abdulkadir</i>!")
-
-// 	d := gomail.NewDialer(host, 587, from, password)
-
-// 	if err := d.DialAndSend(m); err != nil {
-// 		log.Println(err)
-// 		return
-// 	}
-// }
 
 func connect() (*amqp.Connection, error) {
 	var counts int64
