@@ -25,7 +25,9 @@ func main() {
 	}
 	defer conn.Close()
 
-	RecivedReviewToRabbitmq(conn)
+	go RecivedFromRabbitmq("reviews", conn)
+	go RecivedFromRabbitmq("products", conn)
+	go RecivedFromRabbitmq("users", conn)
 }
 
 func connect() (*amqp.Connection, error) {

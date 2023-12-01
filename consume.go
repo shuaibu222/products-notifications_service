@@ -6,7 +6,7 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func RecivedReviewToRabbitmq(conn *amqp.Connection) {
+func RecivedFromRabbitmq(queue string, conn *amqp.Connection) {
 	channel, err := conn.Channel()
 	if err != nil {
 		log.Println("failed to create channel", err)
@@ -15,12 +15,12 @@ func RecivedReviewToRabbitmq(conn *amqp.Connection) {
 	defer channel.Close()
 
 	q, err := channel.QueueDeclare(
-		"reviews", // name
-		false,     // durable
-		false,     // delete when unused
-		false,     // exclusive
-		false,     // no-wait
-		nil,       // arguments
+		queue, // name
+		false, // durable
+		false, // delete when unused
+		false, // exclusive
+		false, // no-wait
+		nil,   // arguments
 	)
 
 	if err != nil {
@@ -46,7 +46,6 @@ func RecivedReviewToRabbitmq(conn *amqp.Connection) {
 	go func() {
 		for d := range msgs {
 			log.Printf("Recived a message: %s", d.Body)
-
 		}
 	}()
 
