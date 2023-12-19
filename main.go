@@ -23,11 +23,15 @@ func main() {
 		log.Println("Failed to connect to RabbitMQ", err)
 		os.Exit(1)
 	}
+
 	defer conn.Close()
 
+	go RecivedFromRabbitmq("users", conn)
 	go RecivedFromRabbitmq("reviews", conn)
 	go RecivedFromRabbitmq("products", conn)
-	go RecivedFromRabbitmq("users", conn)
+
+	// solved
+	select {}
 }
 
 func connect() (*amqp.Connection, error) {
