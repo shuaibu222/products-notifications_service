@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"os"
@@ -10,12 +9,9 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-const (
-	webPort = "80"
-)
-
 func main() {
-	log.Printf("Starting notifications service on port %s\n", webPort)
+
+	log.Println("Notification service running...")
 
 	// initialize the connection of rabbitmq
 	conn, err := connect()
@@ -43,7 +39,7 @@ func connect() (*amqp.Connection, error) {
 	for {
 		c, err := amqp.Dial("amqp://guest:guest@rabbitmq")
 		if err != nil {
-			fmt.Println("RabbitMQ not yet ready...")
+			log.Println("RabbitMQ not yet ready...")
 			counts++
 		} else {
 			log.Println("Connected to RabbitMQ!")
@@ -52,7 +48,7 @@ func connect() (*amqp.Connection, error) {
 		}
 
 		if counts > 5 {
-			fmt.Println(err)
+			log.Println(err)
 			return nil, err
 		}
 
